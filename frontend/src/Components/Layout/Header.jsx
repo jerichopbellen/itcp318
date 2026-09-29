@@ -10,9 +10,10 @@ export const Header = ({ cartItems, user }) => {
     const navigate = useNavigate()
 
     const logoutHandler = () => {
-        logout(() => navigate('/'));
-
-        setUserData(null); // Clear user data in the parent component
+        logout(() => {
+        setUserData(null);
+        navigate('/');
+    });
 
         toast.success('log out', {
             position: 'bottom-right'
