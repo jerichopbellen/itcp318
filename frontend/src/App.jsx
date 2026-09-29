@@ -39,8 +39,11 @@ import UsersList from './Components/Admin/UsersList';
 import UpdateUser from './Components/Admin/UpdateUser';
 import ProtectedRoute from './Components/Route/ProtectedRoute';
 
+import { getUser } from './Components/Utils/helpers';
+
 function App() {
   const [state, setState] = useState({
+    user: getUser() || null,
     cartItems: localStorage.getItem('cartItems')
       ? JSON.parse(localStorage.getItem('cartItems'))
       : [],
@@ -59,6 +62,13 @@ function App() {
     localStorage.setItem('shippingInfo', JSON.stringify(state.shippingInfo));
   }, [state.shippingInfo]);
 
+
+  const setUserData = (user) => {
+    setState(prevState => ({
+        ...prevState,
+        user: user
+    }))
+  }
 
   const addItemToCart = async (id, quantity) => {
     try {
@@ -128,13 +138,16 @@ function App() {
   return (
     <>
       <Router>
-        <Header cartItems={state.cartItems} />
+        <Header cartItems={state.cartItems} 
+                user={state.user}
+                setUserData={setUserData}
+        />
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<ProductDetails cartItems={state.cartItems} addItemToCart={addItemToCart} />} />
           <Route path="/search/:keyword" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login setUserData={setUserData} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/password/forgot" element={<ForgotPassword />} />
           <Route path="/password/reset/:token" element={<NewPassword />} />

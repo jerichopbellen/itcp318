@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate, useLocation, useParams } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 
 import Loader from '../Layout/Loader'
 import MetaData from '../Layout/MetaData';
@@ -8,10 +8,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { getUser, authenticate } from '../Utils/helpers';
 
-const Login = () => {
+const Login = ({ setUserData }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false)
+
     let navigate = useNavigate()
     let location = useLocation()
 
@@ -22,16 +23,30 @@ const Login = () => {
 
     const login = async (email, password) => {
         try {
+            setLoading(true)
+
             const config = {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }
-            const { data } = await axios.post(`http://localhost:4001/api/v1/login`, { email, password }, config)
+
+            const { data } = await axios.post(
+                `http://localhost:4001/api/v1/login`,
+                { email, password },
+                config
+            )
+
             console.log(data)
-            authenticate(data, () => navigate("/"))
+
+            authenticate(data, () => {
+                setUserData(data.user)
+                navigate("/")
+            })
 
         } catch (error) {
+
+            setLoading(false)
 
             toast.error("invalid user or password", {
                 position: 'bottom-right'
@@ -39,13 +54,11 @@ const Login = () => {
         }
     }
 
-    const redirect = location.search ? new URLSearchParams(location.search).get('redirect') : ''
+    const redirect = location.search
+        ? new URLSearchParams(location.search).get('redirect')
+        : ''
+
     console.log(redirect)
-    // useEffect(() => {
-    //     if (getUser()) {
-    //         navigate('/')
-    //     }
-    // }, [])
 
     useEffect(() => {
         if (getUser() && redirect === 'shipping') {
@@ -61,10 +74,12 @@ const Login = () => {
 
                     <div className="row wrapper">
                         <div className="col-10 col-lg-5">
-                            <form className="shadow-lg"
+                            <form
+                                className="shadow-lg"
                                 onSubmit={submitHandler}
                             >
                                 <h1 className="mb-3">Login</h1>
+
                                 <div className="form-group">
                                     <label htmlFor="email_field">Email</label>
                                     <input
@@ -87,7 +102,12 @@ const Login = () => {
                                     />
                                 </div>
 
-                                <Link to="/password/forgot" className="float-right mb-4">Forgot Password?</Link>
+                                <Link
+                                    to="/password/forgot"
+                                    className="float-right mb-4"
+                                >
+                                    Forgot Password?
+                                </Link>
 
                                 <button
                                     id="login_button"
@@ -97,15 +117,19 @@ const Login = () => {
                                     LOGIN
                                 </button>
 
-                                <Link to="/register" className="float-right mt-3">New User?</Link>
+                                <Link
+                                    to="/register"
+                                    className="float-right mt-3"
+                                >
+                                    New User?
+                                </Link>
                             </form>
                         </div>
                     </div>
-
-
                 </>
             )}
         </>
     )
 }
+
 export default Login

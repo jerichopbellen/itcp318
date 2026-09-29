@@ -1,26 +1,24 @@
-import React, { useState, useEffect } from 'react'
 import '../../App.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getUser, logout } from '../Utils/helpers';
+import { logout } from '../Utils/helpers';
 
 import Search from './Search'
-export const Header = ({ cartItems }) => {
+export const Header = ({ cartItems, user }) => {
 
-    const [user, setUser] = useState({})
     const navigate = useNavigate()
 
     const logoutHandler = () => {
-        logout(navigate('/'));
+        logout(() => navigate('/'));
+
+        setUserData(null); // Clear user data in the parent component
 
         toast.success('log out', {
             position: 'bottom-right'
         });
     }
-    useEffect(() => {
-        setUser(getUser())
-    }, []);
+   
     return (
         <>
             <nav className="navbar row">
