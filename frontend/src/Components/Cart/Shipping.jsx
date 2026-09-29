@@ -7,11 +7,11 @@ import CheckoutSteps from './CheckoutSteps'
 const Shipping = ({ shipping, saveShippingInfo }) => {
 
     const countriesList = Object.values(countries)
-    const [address, setAddress] = useState(shipping.address)
-    const [city, setCity] = useState(shipping.city)
-    const [postalCode, setPostalCode] = useState(shipping.postalCode)
-    const [phoneNo, setPhoneNo] = useState(shipping.phoneNo)
-    const [country, setCountry] = useState(shipping.country)
+    const [address, setAddress] = useState(shipping.address || '')
+    const [city, setCity] = useState(shipping.city || '')
+    const [postalCode, setPostalCode] = useState(shipping.postalCode || '')
+    const [phoneNo, setPhoneNo] = useState(shipping.phoneNo || '')
+    const [country, setCountry] = useState(shipping.country || '')
     let navigate = useNavigate();
     const submitHandler = (e) => {
         e.preventDefault()
