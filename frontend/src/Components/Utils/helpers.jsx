@@ -21,14 +21,10 @@ export const authenticate = (data, next) => {
 };
 
 export const logout = next => {
-
-    if (typeof window !== 'undefined') {
-
+    if (window !== 'undefined') {
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('user');
-
     }
-
     next();
 };
 

@@ -1,25 +1,37 @@
+import React, { useState, useEffect } from 'react'
 import '../../App.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { logout } from '../Utils/helpers';
+// import { getUser, logout } from '../Utils/helpers';
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../../actions/userActions'
 
 import Search from './Search'
-export const Header = ({ cartItems, user }) => {
+export const Header = ({ cartItems }) => {
+    const dispatch = useDispatch();
+    const { user, loading } = useSelector(state => state.auth)
 
+    // const [user, setUser] = useState({})
     const navigate = useNavigate()
 
-    const logoutHandler = () => {
-        logout(() => {
-        setUserData(null);
-        navigate('/');
-    });
+    // const logoutHandler = () => {
+    //     logout(navigate('/'));
 
+    //     toast.success('log out', {
+    //         position: 'bottom-right'
+    //     });
+    // }
+
+    const logoutHandler = () => {
+        dispatch(logout());
         toast.success('log out', {
             position: 'bottom-right'
         });
     }
-   
+    // useEffect(() => {
+    //     setUser(getUser())
+    // }, []);
     return (
         <>
             <nav className="navbar row">
